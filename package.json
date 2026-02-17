@@ -1,6 +1,6 @@
 {
 	"name": "@nakanoaas/hono-stripe-webhook-middleware",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "Hono middleware for Stripe webhook signature validation",
 	"author": "Nakano as a Service",
 	"license": "Apache-2.0",
