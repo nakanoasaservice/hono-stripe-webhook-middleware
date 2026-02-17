@@ -51,8 +51,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create \
+          PR_URL=$(gh pr create \
             --base main \
             --head "release/v$NEW_VERSION" \
             --title "Release v$NEW_VERSION" \
-            --body "Release v$NEW_VERSION. Merge this PR to publish to npm and create a GitHub release."
+            --body "Release v$NEW_VERSION. Merge this PR to publish to npm and create a GitHub release.")
+          gh pr edit "$PR_URL" --add-label release
