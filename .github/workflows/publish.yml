@@ -37,6 +37,12 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - name: Build
+        run: pnpm build
+
+      - name: Publish to npm
+        run: pnpm publish
+
       - name: Create Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -45,9 +51,3 @@ jobs:
           echo "Creating release for v$VERSION"
           gh release create "v$VERSION" --generate-notes
           git fetch origin "v$VERSION"
-
-      - name: Build
-        run: pnpm build
-
-      - name: Publish to npm
-        run: pnpm publish
