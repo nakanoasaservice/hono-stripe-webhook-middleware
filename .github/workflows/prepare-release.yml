@@ -1,0 +1,58 @@
+name: Prepare Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: "Version bump type"
+        required: true
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  prepare-release:
+    name: Prepare Release PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Bump version
+        run: |
+          npm version ${{ inputs.version_bump }} --no-git-tag-version
+          echo "NEW_VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
+
+      - name: Commit and push release branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json
+          git commit -m "Release v$NEW_VERSION"
+          git push origin HEAD:release/v$NEW_VERSION
+
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --base main \
+            --head "release/v$NEW_VERSION" \
+            --title "Release v$NEW_VERSION" \
+            --body "Release v$NEW_VERSION. Merge this PR to publish to npm and create a GitHub release."
