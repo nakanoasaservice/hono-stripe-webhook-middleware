@@ -55,4 +55,5 @@ jobs:
             --base main \
             --head "release/v$NEW_VERSION" \
             --title "Release v$NEW_VERSION" \
-            --body "Release v$NEW_VERSION. Merge this PR to publish to npm and create a GitHub release."
+            --body "Release v$NEW_VERSION. Merge this PR to publish to npm and create a GitHub release." \
+            --label release
