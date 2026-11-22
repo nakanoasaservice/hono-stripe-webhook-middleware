@@ -69,11 +69,7 @@ export function stripeWebhookMiddleware(
 		const body = await c.req.text();
 
 		try {
-			const event = await Stripe.webhooks.constructEventAsync(
-				body,
-				signature,
-				...args,
-			);
+			const event = await Stripe.webhooks.constructEventAsync(body, signature, ...args);
 
 			c.set("event", event);
 		} catch (cause) {

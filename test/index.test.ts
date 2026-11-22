@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import Stripe from "stripe";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vite-plus/test";
 
 import { type StripeWebhookVariables, stripeWebhookMiddleware } from "../src";
 
@@ -16,18 +16,12 @@ describe("stripeWebhookMiddleware", () => {
 	it("should raise when the webhook secret is missing", async () => {
 		const message = /Invalid webhook secret/;
 		expect(() => stripeWebhookMiddleware("")).toThrow(message);
-		expect(() => stripeWebhookMiddleware(null as unknown as string)).toThrow(
-			message,
-		);
-		expect(() =>
-			stripeWebhookMiddleware(undefined as unknown as string),
-		).toThrow(message);
+		expect(() => stripeWebhookMiddleware(null as unknown as string)).toThrow(message);
+		expect(() => stripeWebhookMiddleware(undefined as unknown as string)).toThrow(message);
 	});
 
 	it("should raise when the webhook secret is invalid", async () => {
-		expect(() => stripeWebhookMiddleware("invalid")).toThrow(
-			/Invalid webhook secret/,
-		);
+		expect(() => stripeWebhookMiddleware("invalid")).toThrow(/Invalid webhook secret/);
 	});
 
 	it("should return function when the webhook secret is valid", async () => {
@@ -81,9 +75,7 @@ describe("stripeWebhookMiddleware", () => {
 			secret: SECRET,
 		});
 
-		const app = new Hono().post("/", stripeWebhookMiddleware(SECRET), (c) =>
-			c.body(null, 200),
-		);
+		const app = new Hono().post("/", stripeWebhookMiddleware(SECRET), (c) => c.body(null, 200));
 
 		const response = await app.request("/", {
 			method: "POST",
