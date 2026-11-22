@@ -32,21 +32,17 @@ yarn add @nakanoaas/hono-stripe-webhook-middleware
 ```ts
 import { Hono } from "hono";
 import {
-  stripeWebhookMiddleware,
-  type StripeWebhookVariables,
+	stripeWebhookMiddleware,
+	type StripeWebhookVariables,
 } from "@nakanoaas/hono-stripe-webhook-middleware";
 
 const app = new Hono<{ Variables: StripeWebhookVariables }>();
 
-app.post(
-  "/webhook",
-  stripeWebhookMiddleware("whsec_your_webhook_secret"),
-  (c) => {
-    const event = c.get("event"); // Stripe.Event — fully typed
-    console.log(`Received event: ${event.type}`);
-    return c.json({ received: true });
-  }
-);
+app.post("/webhook", stripeWebhookMiddleware("whsec_your_webhook_secret"), (c) => {
+	const event = c.get("event"); // Stripe.Event — fully typed
+	console.log(`Received event: ${event.type}`);
+	return c.json({ received: true });
+});
 ```
 
 ## Runtime Examples
@@ -57,20 +53,16 @@ app.post(
 import { Hono } from "hono";
 import { env } from "cloudflare:workers";
 import {
-  stripeWebhookMiddleware,
-  type StripeWebhookVariables,
+	stripeWebhookMiddleware,
+	type StripeWebhookVariables,
 } from "@nakanoaas/hono-stripe-webhook-middleware";
 
 const app = new Hono<{ Variables: StripeWebhookVariables }>();
 
-app.post(
-  "/webhook",
-  stripeWebhookMiddleware(env.STRIPE_WEBHOOK_SECRET),
-  (c) => {
-    const event = c.get("event");
-    return c.json({ received: true });
-  }
-);
+app.post("/webhook", stripeWebhookMiddleware(env.STRIPE_WEBHOOK_SECRET), (c) => {
+	const event = c.get("event");
+	return c.json({ received: true });
+});
 
 export default app;
 ```
@@ -81,20 +73,16 @@ export default app;
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import {
-  stripeWebhookMiddleware,
-  type StripeWebhookVariables,
+	stripeWebhookMiddleware,
+	type StripeWebhookVariables,
 } from "@nakanoaas/hono-stripe-webhook-middleware";
 
 const app = new Hono<{ Variables: StripeWebhookVariables }>();
 
-app.post(
-  "/webhook",
-  stripeWebhookMiddleware(process.env.STRIPE_WEBHOOK_SECRET!),
-  (c) => {
-    const event = c.get("event");
-    return c.json({ received: true });
-  }
-);
+app.post("/webhook", stripeWebhookMiddleware(process.env.STRIPE_WEBHOOK_SECRET!), (c) => {
+	const event = c.get("event");
+	return c.json({ received: true });
+});
 
 serve(app);
 ```
@@ -104,20 +92,16 @@ serve(app);
 ```ts
 import { Hono } from "npm:hono";
 import {
-  stripeWebhookMiddleware,
-  type StripeWebhookVariables,
+	stripeWebhookMiddleware,
+	type StripeWebhookVariables,
 } from "npm:@nakanoaas/hono-stripe-webhook-middleware";
 
 const app = new Hono<{ Variables: StripeWebhookVariables }>();
 
-app.post(
-  "/webhook",
-  stripeWebhookMiddleware(Deno.env.get("STRIPE_WEBHOOK_SECRET")!),
-  (c) => {
-    const event = c.get("event");
-    return c.json({ received: true });
-  }
-);
+app.post("/webhook", stripeWebhookMiddleware(Deno.env.get("STRIPE_WEBHOOK_SECRET")!), (c) => {
+	const event = c.get("event");
+	return c.json({ received: true });
+});
 
 Deno.serve(app.fetch);
 ```
@@ -127,20 +111,16 @@ Deno.serve(app.fetch);
 ```ts
 import { Hono } from "hono";
 import {
-  stripeWebhookMiddleware,
-  type StripeWebhookVariables,
+	stripeWebhookMiddleware,
+	type StripeWebhookVariables,
 } from "@nakanoaas/hono-stripe-webhook-middleware";
 
 const app = new Hono<{ Variables: StripeWebhookVariables }>();
 
-app.post(
-  "/webhook",
-  stripeWebhookMiddleware(Bun.env.STRIPE_WEBHOOK_SECRET!),
-  (c) => {
-    const event = c.get("event");
-    return c.json({ received: true });
-  }
-);
+app.post("/webhook", stripeWebhookMiddleware(Bun.env.STRIPE_WEBHOOK_SECRET!), (c) => {
+	const event = c.get("event");
+	return c.json({ received: true });
+});
 
 export default app;
 ```
@@ -152,25 +132,25 @@ If the webhook secret is not available at module scope (e.g. it lives in the req
 ```ts
 import { Hono } from "hono";
 import {
-  stripeWebhookMiddleware,
-  type StripeWebhookVariables,
+	stripeWebhookMiddleware,
+	type StripeWebhookVariables,
 } from "@nakanoaas/hono-stripe-webhook-middleware";
 
 type Env = {
-  Bindings: { STRIPE_WEBHOOK_SECRET: string };
-  Variables: StripeWebhookVariables;
+	Bindings: { STRIPE_WEBHOOK_SECRET: string };
+	Variables: StripeWebhookVariables;
 };
 
 const app = new Hono<Env>();
 
 app.use("/webhook/*", (c, next) => {
-  const middleware = stripeWebhookMiddleware(c.env.STRIPE_WEBHOOK_SECRET);
-  return middleware(c, next);
+	const middleware = stripeWebhookMiddleware(c.env.STRIPE_WEBHOOK_SECRET);
+	return middleware(c, next);
 });
 
 app.post("/webhook", (c) => {
-  const event = c.get("event");
-  return c.json({ received: true });
+	const event = c.get("event");
+	return c.json({ received: true });
 });
 ```
 
@@ -182,11 +162,11 @@ When signature verification fails, the middleware throws an `HTTPException` with
 import { HTTPException } from "hono/http-exception";
 
 app.onError((error, c) => {
-  if (error instanceof HTTPException) {
-    console.error(error.cause);
-    return error.getResponse();
-  }
-  // ...
+	if (error instanceof HTTPException) {
+		console.error(error.cause);
+		return error.getResponse();
+	}
+	// ...
 });
 ```
 
@@ -215,3 +195,11 @@ If you don't need the full Stripe SDK and want a smaller bundle, check out [hono
 ## License
 
 Apache-2.0
+
+## Development
+
+Use Node.js 24 and the pnpm version pinned in `package.json`.
+Run `pnpm install --frozen-lockfile`, `pnpm check`, `pnpm test`, and `pnpm build`.
+Vite+ provides formatting, linting, type checks, tests and packaging. Tests
+continue to run in the Cloudflare Workers runtime. Library builds retain
+ESM, CommonJS, declaration files and source maps.

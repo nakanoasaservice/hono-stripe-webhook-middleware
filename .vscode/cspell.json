@@ -1,13 +1,4 @@
 {
 	"$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
-	"words": [
-		"accum",
-		"esbuild",
-		"nakano",
-		"nakanoaas",
-		"oaicite",
-		"stripe",
-		"whsec",
-		"workerd"
-	]
+	"words": ["accum", "esbuild", "nakano", "nakanoaas", "oaicite", "stripe", "whsec", "workerd"]
 }
